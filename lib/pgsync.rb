@@ -99,9 +99,19 @@ module PgSync
           log "* Dumping schema"
           tables = tables.keys.map { |t| "-t #{t}" }.join(" ")
           psql_version = Gem::Version.new(`psql --version`.lines[0].chomp.split(" ")[-1])
+          no_uri_support = psql_version < Gem::Version.new("9.2.0")
+          src_conn_string = ""
+          dest_conn_string = ""
+          if no_uri_support
+              src_conn_string = "\"#{uri_to_kv(source_uri)}\""
+              dest_conn_string = "\"#{uri_to_kv(destination_uri)}\""
+          else
+              src_conn_string = to_url(source_uri)
+              dest_conn_string = to_url(destination_uri)
+          end
           if_exists = psql_version >= Gem::Version.new("9.4.0")
-          dump_command = "pg_dump -Fc --verbose --schema-only --no-owner --no-acl #{tables} #{to_url(source_uri)}"
-          restore_command = "pg_restore --verbose --no-owner --no-acl --clean #{if_exists ? "--if-exists" : nil} -d #{to_url(destination_uri)}"
+          dump_command = "pg_dump -Fc --verbose --schema-only --no-owner --no-acl #{tables} #{src_conn_string}"
+          restore_command = "pg_restore --verbose --no-owner --no-acl --clean #{if_exists ? "--if-exists" : nil} -d #{dest_conn_string}"
           system("#{dump_command} | #{restore_command}")
 
           log_completed(start_time)
@@ -515,6 +525,22 @@ Options:}
       uri.query = nil
       uri.to_s
     end
+
+    def uri_to_kv(uri)
+        uri_parser = URI::Parser.new
+        config = {
+            host: uri.host,
+            port: uri.port,
+            dbname: uri.path.sub(/\A\//, ""),
+            user: uri.user,
+            password: uri.password,
+            connect_timeout: 3
+        }.reject { |_, value| value.to_s.empty? }
+        config.map { |key, value| config[key] = uri_parser.unescape(value) if value.is_a?(String) }
+        puts(config)
+        config.map{|k,v| "#{k}=#{v}"}.join(" ")
+    end
+
 
     def search_tree(file)
       path = Dir.pwd
