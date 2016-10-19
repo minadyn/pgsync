@@ -9,7 +9,7 @@ before_install:
     - docker pull postgres:9.2
     - docker run --name postgres92 -p 5433:5432 -d postgres:9.2
     - docker ps -a
-    - docker pull centos/postgresql 
-    - docker run --name postgresql-centos -p 5434:5432 -d centos/postgresql
+    - docker pull centos/postgresql-94-centos7 
+    - docker run --name postgresql-centos -p 5434:5432 -d centos/postgresql-94-centos7
     - docker ps -a
 
