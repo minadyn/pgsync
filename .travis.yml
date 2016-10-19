@@ -4,10 +4,10 @@ rvm: 2.2
 services:
     - docker
 before_install:
-    - docker pull $PGIMAGENAME
-    - docker run --name postgres -d $PGIMAGENAME
+    - docker pull $PGDOCKERIMAGE
+    - docker run --name postgres -d $PGDOCKERIMAGE
     - docker ps -a
 env:
-    - PGIMAGENAME=postgres:9.1
-    - PGIMAGENAME=postgres:9.2
-    - PGIMAGENAME=postgres:9.3
+    - PGDOCKERIMAGE=postgres:9.1
+    - PGDOCKERIMAGE=postgres:9.2
+    - PGDOCKERIMAGE=postgres:9.3
