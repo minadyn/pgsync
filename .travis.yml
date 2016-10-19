@@ -1,5 +1,6 @@
 sudo: required
 language: ruby
+rvm: 2.2
 services:
     - docker
 before_install:
@@ -12,4 +13,7 @@ before_install:
     - docker pull centos/postgresql-94-centos7 
     - docker run --name postgresql-centos -p 5434:5432 -d centos/postgresql-94-centos7
     - docker ps -a
-
+matrix:
+    include:
+        - env: PGPORT=5433
+        - env: PGPORT=5434
