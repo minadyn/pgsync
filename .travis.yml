@@ -2,13 +2,12 @@ sudo: required
 language: ruby
 services:
     - docker
-matrix:
-    include:
-        before_install:
-            - docker pull postgres:9.1
-            - docker run --name postgres91 -d postgres:9.1
-            - docker ps -a
-        before_install:
-            - docker pull postgres:9.2
-            - docker run --name postgres92 -d postgres:9.2
-            - docker ps -a
+before_install:
+    - docker pull postgres:9.1
+    - docker run --name postgres91 -d postgres:9.1
+    - docker ps -a
+    - docker pull postgres:9.2
+    - docker run --name postgres92 -p 127.0.0.1:5433:5432 -d postgres:9.2
+    - docker ps -a
+    - docker pull
+
