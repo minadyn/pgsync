@@ -4,15 +4,10 @@ rvm: 2.2
 services:
     - docker
 before_install:
-    - docker pull postgres:9.1
-    - docker run --name postgres91 -d postgres:9.1
-    - docker ps -a
-    - docker pull postgres:9.2
-    - docker run --name postgres92 -p 5433:5432 -d postgres:9.2
-    - docker ps -a
-    - docker pull centos/postgresql-94-centos7 
-    - docker run --name postgresql-centos -p 5434:5432 -d centos/postgresql-94-centos7
+    - docker pull $PGIMAGENAME
+    - docker run --name postgres -d $PGIMAGENAME
     - docker ps -a
 env:
-    - PGPORT=5433
-    - PGPORT=5434
+    - PGIMAGENAME=postgres:9.1
+    - PGIMAGENAME=postgres:9.2
+    - PGIMAGENAME=postgres:9.3
