@@ -11,3 +11,4 @@ env:
     - PGDOCKERIMAGE=postgres:9.1
     - PGDOCKERIMAGE=postgres:9.2
     - PGDOCKERIMAGE=postgres:9.3
+    - PGDOCKERIMAGE=minadyn/centos6-postgres-9.0
